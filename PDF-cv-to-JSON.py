@@ -1,6 +1,25 @@
 import requests
 import PyPDF2
 
+import openai
+
+openai.api_key = "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"
+
+def chat_with_chatgpt(prompt, model="davinci"):
+    response = openai.Completion.create(
+        engine=model,
+        prompt=text,
+        max_tokens=100,
+        n=1,
+        stop=None,
+        temperature=0.5,
+    )
+
+    print(response)
+
+    message = response.choices[0].text.strip()
+    return message
+
 def convert_pdf_to_text(pdf_file_path):
     # Read the PDF file and extract text
     with open(pdf_file_path, 'rb') as file:
@@ -15,9 +34,9 @@ def convert_text_to_json(text):
     # Make a POST request to the ChatGPT API
     response = requests.post(
         'https://api.openai.com/v1/engines/davinci/completions',
-        headers={'Authorization': 'Bearer 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'},
+        headers={'Authorization': 'Bearer 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'},
         json={
-            'prompt': f"hello",
+            'prompt': f"give me the summay of this resume in json format \n \n {text}",
             'max_tokens': 1024,
             'temperature': 0.7,
             'n': 1,
@@ -42,8 +61,11 @@ pdf_file_path = 'resume.pdf'
 text = convert_pdf_to_text(pdf_file_path)
 print(f"raw text: {text}")
 # Convert text to JSON using ChatGPT
-json_output = convert_text_to_json(text)
+# json_output = convert_text_to_json(text)
 #print(json_output)
 # Save JSON to output file
-save_json_to_file(json_output)
+# save_json_to_file(json_output)
+
+chatgpt_answer = chat_with_chatgpt(text)
+print(f"This is the response from chatgpt: {chatgpt_answer}")
 
